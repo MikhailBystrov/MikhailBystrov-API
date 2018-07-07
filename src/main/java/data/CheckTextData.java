@@ -23,11 +23,11 @@ public class CheckTextData {
     public static final CheckTextData WORD_WITH_DIGITS = new CheckTextData( "33желания",
             Collections.singletonList("33 желания"));
     public static final CheckTextData WORD_NAME = new CheckTextData( "alex russia kate",
-            Arrays.asList("alex", "Russia", "Kate"));
+            Arrays.asList("Alex", "Russia", "Kate"));
     public static final CheckTextData MISSED_LETTER = new CheckTextData( "корбль",
             Collections.singletonList("корабль"));
     public static final CheckTextData SUPERFLUOUS_LETTER = new CheckTextData( "счаастье",
-            Collections.singletonList("счасть"));
+            Collections.singletonList("счастье"));
     public static final CheckTextData WRONG_URL = new CheckTextData( "htps://tech.yandex.ru/speller/",
             Collections.singletonList("https"));
     public static final CheckTextData REPEAT_WORDS = new CheckTextData( "I want want holiday",

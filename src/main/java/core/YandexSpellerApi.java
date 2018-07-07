@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-import static core.YandexSpellerConstants.Languages;
 import static core.YandexSpellerConstants.PARAM_LANG;
 import static core.YandexSpellerConstants.PARAM_OPTIONS;
 import static core.YandexSpellerConstants.PARAM_TEXT;
@@ -50,8 +49,8 @@ public class YandexSpellerApi {
             return this;
         }
 
-        public ApiBuilder language(Languages language) {
-            spellerApi.params.put(PARAM_LANG, language.languageCode);
+        public ApiBuilder language(String language) {
+            spellerApi.params.put(PARAM_LANG, language);
             return this;
         }
 
