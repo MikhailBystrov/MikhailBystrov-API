@@ -1,6 +1,7 @@
 import beans.YandexSpellerAnswer;
 import core.YandexSpellerApi;
 import io.restassured.RestAssured;
+import matchers.AnswersMatcher;
 import matchers.MatchesRegex;
 import org.testng.annotations.Test;
 
@@ -29,12 +30,14 @@ import static enums.Options.IGNORE_URLS;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Created by Mikhail on 05.07.2018
  */
 public class TestYandexSpellerJSON {
 
+    private AnswersMatcher answersMatcher = new AnswersMatcher();
     // 1. checkText with no mistakes
     @Test(description = "Api should return empty body if there are no mistakes")
     public void wordWithNoMistakes() {
@@ -56,9 +59,7 @@ public class TestYandexSpellerJSON {
                                 .language(RU.languageCode)
                                 .text(NO_SPACES_WORDS.word)
                                 .callApi());
-        for(String rightWord : NO_SPACES_WORDS.rightWord) {
-            assertThat(answers.get(NO_SPACES_WORDS.rightWord.indexOf(rightWord)).s.get(0), equalTo(rightWord));
-        }
+            assertTrue(answersMatcher.matchesAnswers(answers, 1, "невероятные приключения"));
     }
 
     // 3. checkText with accidental space
@@ -70,10 +71,8 @@ public class TestYandexSpellerJSON {
                                 .language(RU.languageCode)
                                 .text(ACCIDENTAL_SPACE.word)
                                 .callApi());
-        assertThat(ASSERT_REASON, answers.size(), equalTo(2));
-        for(String rightWord : ACCIDENTAL_SPACE.rightWord) {
-            assertThat(answers.get(ACCIDENTAL_SPACE.rightWord.indexOf(rightWord)).s.get(0), equalTo(rightWord));
-        }
+        assertTrue(answersMatcher.matchesAnswers(answers, 2, "электрическая"));
+        assertTrue(answersMatcher.matchesAnswers(answers, 2, "дуга"));
     }
 
     // 4. checkText with alternating lowercase and uppercase in one word
@@ -86,7 +85,7 @@ public class TestYandexSpellerJSON {
                                 .language(RU.languageCode)
                                 .text(LOWERCASE_AND_UPPERCASE.word)
                                 .callApi());
-        assertThat(ASSERT_REASON, answers.size(), greaterThan(0));
+        assertTrue(answersMatcher.matchesAnswers(answers, 3, "написание"));
     }
 
     // 5. checkText with digits attached to words
@@ -99,10 +98,7 @@ public class TestYandexSpellerJSON {
                                 .language(RU.languageCode)
                                 .text(WORD_WITH_DIGITS.word)
                                 .callApi());
-        assertThat(ASSERT_REASON, answers.size(), greaterThan(0));
-        for(String rightWord : WORD_WITH_DIGITS.rightWord) {
-            assertThat(answers.get(WORD_WITH_DIGITS.rightWord.indexOf(rightWord)).s.get(0), equalTo(rightWord));
-        }
+        assertTrue(answersMatcher.matchesAnswers(answers, 1, "33 желания"));
     }
 
     // 6. checkText with digits attached to words and option equal '2'
@@ -174,8 +170,7 @@ public class TestYandexSpellerJSON {
                                 .language(EN.languageCode)
                                 .text(WRONG_URL.word)
                                 .callApi());
-        assertThat(ASSERT_REASON, answers.size(), equalTo(1));
-        assertThat(answers.get(0).s.get(0), equalTo(WRONG_URL.rightWord.get(0)));
+        assertTrue(answersMatcher.matchesAnswers(answers, 1, "http"), ASSERT_REASON);
     }
 
     // 11. checkText ignore wrong url
